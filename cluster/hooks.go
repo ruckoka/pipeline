@@ -670,6 +670,13 @@ func InstallHorizontalPodAutoscalerPostHook(cluster CommonCluster) error {
 	values := map[string]interface{}{
 		"affinity":    getHeadNodeAffinity(cluster),
 		"tolerations": getHeadNodeTolerations(),
+		"kube-metrics-adapter": map[string]interface{}{
+			"prometheus": map[string]interface{}{
+				"url": fmt.Sprintf("http://monitor-prometheus-server.%s.svc/prometheus", infraNamespace),
+			},
+			"affinity":    getHeadNodeAffinity(cluster),
+			"tolerations": getHeadNodeTolerations(),
+		},
 	}
 
 	// install metricsServer for Amazon & Azure & Alibaba & Oracle only if metrics.k8s.io endpoint is not available already
